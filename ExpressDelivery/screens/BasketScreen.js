@@ -3,7 +3,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../features/restaurantSlice";
-import { removeFromBasket, selectBasketItems } from "../features/basketSlice";
+import {
+  removeFromBasket,
+  selectBasketItems,
+  selectBasketTotal,
+} from "../features/basketSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { XCircleIcon } from "react-native-heroicons/solid";
 import colors from "../config/colors";
@@ -15,6 +19,7 @@ const BasketScreen = () => {
   const restaurant = useSelector(selectRestaurant);
   const [groupedItemsInBasket, setGroupedItemsInBasket] = useState([]);
   const items = useSelector(selectBasketItems);
+  const basketTotal = useSelector(selectBasketTotal);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,6 +88,33 @@ const BasketScreen = () => {
             </View>
           ))}
         </ScrollView>
+
+        <View className="p-5 bg-white mt-5 space-y-4">
+          <View className="flex-row justify-between">
+            <Text className="text-gray-400">Subtotal</Text>
+            <Text className="text-gray-400">
+              <Currency quantity={basketTotal} currency="USD" />
+            </Text>
+          </View>
+          <View className="flex-row justify-between">
+            <Text className="text-gray-400">Delivery Fee</Text>
+            <Text className="text-gray-400">
+              <Currency quantity={1.99} currency="USD" />
+            </Text>
+          </View>
+          <View className="flex-row justify-between">
+            <Text>Order Total</Text>
+            <Text className="font-extrabold">
+              <Currency quantity={basketTotal + 1.99} currency="USD" />
+            </Text>
+          </View>
+
+          <TouchableOpacity className="rounded-lg bg-[#00CCBB] p-4">
+            <Text className="text-center text-white text-lg font-bold">
+              Place Order
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
